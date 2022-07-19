@@ -140,7 +140,6 @@ public class Rainfall {
             getTotalRainfall(), getMonthlyAvg(),
             getMonthName(maxR), this.array[maxR],
             getMonthName(minR), this.array[minR]);
-
     return header;
   }
 }
