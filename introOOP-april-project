@@ -1,0 +1,146 @@
+/*
+* Main method will use the Rainfall class, which utilizes an array
+* of doubles to store total rainfall for each month of a year.
+* Methods from Rainfall will be called to output various data
+* regarding the year's rainfall.
+*/
+
+public class CRS_P01 {
+  public static void main(String[] args) {
+  
+    // Hard coded array to validate Rainfall class output
+    double[] monthVals = {1.66, 82.10, 211.70, 3.50, 132.60, 3.70,
+                        73.90, 52.60, 102.90, 4.30, 2.40, 63.70};
+
+    Rainfall rainfallArray = new Rainfall(monthVals);
+    System.out.println(rainfallArray);
+  }
+}
+
+public class Rainfall {
+
+  private double[] array = new double[12];
+
+  /**
+  * Default constructor for Rainfall class
+  * @param arr The double array representing rainfall in each month of the year
+  */
+  public Rainfall(double[] arr) {
+    int i = 0;
+    for (i = 0; i < arr.length; i++) {
+      array[i] = arr[i];
+    }
+  }
+
+  /**
+  * Calculates and returns the total rainfall in the year
+  * @return sum of each month's rainfall
+  */
+  public double getTotalRainfall() {
+    double sum = 0;
+    for (double item: this.array)
+      sum += item;
+    return sum;
+  }
+
+  /**
+  * Calculates and returns average rainfall per month
+  * @return average monthly rainfall
+  */
+  public double getMonthlyAvg() {
+    return getTotalRainfall() / 12;
+  }
+
+  /**
+  * Finds the month with the least rainfall
+  * @return index of month with lowest rainfall
+  */
+  public int getMinRain() {
+    int month = 0;
+    for (int i = 1; i < 12; i++) {
+      if (this.array[i] < this.array[month])
+        month = i;
+    }
+    return month;
+  }
+
+  /**
+  * Finds the month with the most rainfall
+  * @return index of month with highest rainfall
+  */
+  public int getMaxRain() {
+    int month = 0;
+    for (int i = 1; i < 12; i++) {
+      if (this.array[i] > this.array[month])
+        month = i;
+    }
+    return month;
+  }
+
+  /**
+  * Finds name of month based on index returned by getMaxRain()
+  * and getMinRain() methods
+  * @param num index within Rainfall's array
+  * @return string of the appropriate month's name
+  */
+  private String getMonthName(int num) {
+    switch (num) {
+      case 0:
+        return "January";
+      case 1:
+        return "February";
+      case 2:
+        return "March";
+      case 3:
+        return "April";
+      case 4:
+        return "May";
+      case 5:
+        return "June";
+      case 6:
+        return "July";
+      case 7:
+        return "August";
+      case 8:
+        return "September";
+      case 9:
+        return "October";
+      case 10:
+        return "November";
+      case 11:
+        return "December";
+      default:
+        return "None";
+    }
+  }
+
+  /**
+  * Formatting a table of the months and their rainfall, followed
+  * by the total and average rainfall and the months with
+  * highest and lowest overall rain.
+  * 
+  * @return formatted table of month/rain data, various facts
+  */
+  @Override
+  public String toString() {
+    String header = String.format("%-14s %s\n", "MONTH", "RAIN");
+    int maxR = getMaxRain();
+    int minR = getMinRain();
+
+    // Add each month's data to table
+    for (int i = 0; i < 12; i++) {
+      header += String.format("%-14s %.2f\n", getMonthName(i), this.array[i]);
+    }
+
+    // Add facts about rainfall
+    header += String.format("\nThe total rainfall for this year is %.2f inches.\n"
+            + "The average rainfall for this year is %.2f inches.\n"
+            + "The month with the highest amount of rain is %s with %.2f inches.\n"
+            + "The month with the lowest amount of rain is %s with %.2f inches.\n",
+            getTotalRainfall(), getMonthlyAvg(),
+            getMonthName(maxR), this.array[maxR],
+            getMonthName(minR), this.array[minR]);
+
+    return header;
+  }
+}
