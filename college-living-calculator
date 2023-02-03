@@ -166,7 +166,7 @@ public class ResidenceCostCalcFrame extends JFrame implements ActionListener {
 	// driver to test program
 	public static void main(String[] args) {
 		// initialize the user's frame and GUI components
-		LivingCostsFrame mainWindow = new LivingCostsFrame();
+		ResidenceCostCalcFrame mainWindow = new ResidenceCostCalcFrame();
 
 		// terminate program upon closing the frame
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
