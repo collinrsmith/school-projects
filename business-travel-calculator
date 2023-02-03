@@ -1,0 +1,377 @@
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JOptionPane;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
+
+/**
+ * A calculator for travel/business expenses. Contains various fields for user
+ * input and calculates their expenses and reimbursements when a button is
+ * pressed, displaying related information to the user.
+ * 
+ * @author Collin
+ *
+ */
+class TravelExpenseCalcFrame extends JFrame implements ActionListener {
+	// fields for user to input data
+
+	// number of days stayed
+	private JFormattedTextField numDaysField;
+	// cost of airfare
+	private JFormattedTextField airfareField;
+	// cost of car rental
+	private JFormattedTextField carRentalFeeField;
+	// miles driven with private car
+	private JFormattedTextField milesDrivenField;
+	// cost of parking
+	private JFormattedTextField parkingFeeField;
+	// cost of taxis
+	private JFormattedTextField taxiFeeField;
+	// cost of event registration
+	private JFormattedTextField registerFeeField;
+	// cost of lodging per night
+	private JFormattedTextField lodgingFeeField;
+
+	// triggers expense/reimbursement calculation
+	private JButton calculateButton;
+	// displays info about calculation
+	private JTextArea outputArea;
+
+	/**
+	 * Construct a GUI and its components using GridBagLayout. Enables user to input
+	 * and calculate data, displaying info in output field.
+	 */
+	public TravelExpenseCalcFrame() {
+		// layout constraints for components
+		GridBagConstraints layoutConst = null;
+
+		// corresponding label for each text field
+		JLabel numDaysLabel = new JLabel("Number of days on trip:");
+		JLabel airfareLabel = new JLabel("Amount of airfare:");
+		JLabel carRentalFeeLabel = new JLabel("Amount of car rental fees:");
+		JLabel milesDrivenLabel = new JLabel("Miles driven in private car:");
+		JLabel parkingFeeLabel = new JLabel("Amount of parking fees:");
+		JLabel taxiFeeLabel = new JLabel("Amount of taxi charges:");
+		JLabel registerFeeLabel = new JLabel("Amount of event registration fee:");
+		JLabel lodgingFeeLabel = new JLabel("Cost of lodging per night:");
+		JLabel outputLabel = new JLabel("Expense Report:");
+
+		// create number formats to improve user's display
+
+		// number of days: integer format
+		NumberFormat numDaysFormat = NumberFormat.getIntegerInstance();
+		// airfare: currency format
+		NumberFormat airfareFormat = NumberFormat.getCurrencyInstance();
+		// car rental fee: currency format
+		NumberFormat carRentalFeeFormat = NumberFormat.getCurrencyInstance();
+		// miles driven: number/double format
+		NumberFormat milesDrivenFormat = NumberFormat.getNumberInstance();
+		// parking fee: currency format
+		NumberFormat parkingFeeFormat = NumberFormat.getCurrencyInstance();
+		// taxi fee: currency format
+		NumberFormat taxiFeeFormat = NumberFormat.getCurrencyInstance();
+		// registration fee: currency format
+		NumberFormat registerFeeFormat = NumberFormat.getCurrencyInstance();
+		// lodging fee: currency format
+		NumberFormat lodgingFeeFormat = NumberFormat.getCurrencyInstance();
+
+		// create output display and add scroll pane
+		outputArea = new JTextArea(10, 15);
+		JScrollPane scrollPane = new JScrollPane(outputArea);
+		outputArea.setEditable(false);
+
+		// set window title
+		setTitle("Travel Expense Calculator");
+
+		// create button
+		calculateButton = new JButton("Calculate!");
+		calculateButton.addActionListener(this);
+
+		// create numDays field and set format
+		numDaysField = new JFormattedTextField(numDaysFormat);
+		numDaysField.setColumns(10);
+		numDaysField.setEditable(true);
+		numDaysField.setValue(0);
+
+		// create airfare field and set format
+		airfareField = new JFormattedTextField(airfareFormat);
+		airfareField.setColumns(10);
+		airfareField.setEditable(true);
+		airfareField.setValue(0);
+
+		// create carRentalFee field and set format
+		carRentalFeeField = new JFormattedTextField(carRentalFeeFormat);
+		carRentalFeeField.setColumns(10);
+		carRentalFeeField.setEditable(true);
+		carRentalFeeField.setValue(0);
+
+		// create milesDriven field and set format
+		milesDrivenField = new JFormattedTextField(milesDrivenFormat);
+		milesDrivenField.setColumns(10);
+		milesDrivenField.setEditable(true);
+		milesDrivenField.setValue(0);
+
+		// create parkingFee field and set format
+		parkingFeeField = new JFormattedTextField(parkingFeeFormat);
+		parkingFeeField.setColumns(10);
+		parkingFeeField.setEditable(true);
+		parkingFeeField.setValue(0);
+
+		// create taxiFee field and set format
+		taxiFeeField = new JFormattedTextField(taxiFeeFormat);
+		taxiFeeField.setColumns(10);
+		taxiFeeField.setEditable(true);
+		taxiFeeField.setValue(0);
+
+		// create registerFee field and set format
+		registerFeeField = new JFormattedTextField(registerFeeFormat);
+		registerFeeField.setColumns(10);
+		registerFeeField.setEditable(true);
+		registerFeeField.setValue(0);
+
+		// create lodgingFee field and set format
+		lodgingFeeField = new JFormattedTextField(lodgingFeeFormat);
+		lodgingFeeField.setColumns(10);
+		lodgingFeeField.setEditable(true);
+		lodgingFeeField.setValue(0);
+
+		// set up gridbaglayout and place components
+		setLayout(new GridBagLayout());
+
+		// place numDays label and field
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 5, 2);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 0;
+		add(numDaysLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 2, 5, 10);
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 0;
+		add(numDaysField, layoutConst);
+
+		// place airfare label and field
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 10, 5, 2);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 1;
+		add(airfareLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 2, 5, 10);
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 1;
+		add(airfareField, layoutConst);
+
+		// place carRentalFee label and field
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 10, 5, 2);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 2;
+		add(carRentalFeeLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 2, 5, 10);
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 2;
+		add(carRentalFeeField, layoutConst);
+
+		// place milesDriven label and field
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 10, 5, 2);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 3;
+		add(milesDrivenLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 2, 5, 10);
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 3;
+		add(milesDrivenField, layoutConst);
+
+		// place parkingFee label and field
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 10, 5, 2);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 4;
+		add(parkingFeeLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 2, 5, 10);
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 4;
+		add(parkingFeeField, layoutConst);
+
+		// place taxiFee label and field
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 10, 5, 2);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 5;
+		add(taxiFeeLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 2, 5, 10);
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 5;
+		add(taxiFeeField, layoutConst);
+
+		// place registerFee label and field
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 10, 5, 2);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 6;
+		add(registerFeeLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 2, 5, 10);
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 6;
+		add(registerFeeField, layoutConst);
+
+		// place lodgingFee label and field
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 10, 10, 2);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 7;
+		add(lodgingFeeLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 2, 10, 10);
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 7;
+		add(lodgingFeeField, layoutConst);
+
+		// place button
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(0, 10, 0, 10);
+		layoutConst.fill = GridBagConstraints.VERTICAL;
+		layoutConst.gridwidth = 2;
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 8;
+		add(calculateButton, layoutConst);
+
+		// place output label and output area with scroll bar
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(5, 10, 0, 10);
+		layoutConst.anchor = GridBagConstraints.WEST;
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 9;
+		add(outputLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(0, 10, 10, 10);
+		layoutConst.gridwidth = 6;
+		layoutConst.fill = GridBagConstraints.BOTH;
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 10;
+		add(scrollPane, layoutConst);
+	}
+
+	/**
+	 * Compute and display expenses, reimbursements, and the amount owed/saved upon
+	 * pressing the calculate button.
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// pull user values from GUI
+
+		// number of days
+		int numDays = ((Number) numDaysField.getValue()).intValue();
+		// airfare cost
+		double airfare = ((Number) airfareField.getValue()).doubleValue();
+		// rental cost
+		double carRental = ((Number) carRentalFeeField.getValue()).doubleValue();
+		// miles driven in private car
+		double miles = ((Number) milesDrivenField.getValue()).doubleValue();
+		// parking cost
+		double parking = ((Number) parkingFeeField.getValue()).doubleValue();
+		// taxi cost
+		double taxi = ((Number) taxiFeeField.getValue()).doubleValue();
+		// registration cost
+		double registration = ((Number) registerFeeField.getValue()).doubleValue();
+		// lodging cost per night
+		double lodging = ((Number) lodgingFeeField.getValue()).doubleValue();
+		
+		// check for negative values in the fields that accept them
+		if ((numDays < 0) || (miles < 0)) {
+			JOptionPane.showMessageDialog(this, "Please enter non-negative values.");
+			return;
+		}
+
+		// calculate reimbursements
+
+		// meal compensation: $37 per day
+		double mealComp = 37 * numDays;
+		// parking compensation: up to $10 per day
+		double parkingComp = (parking >= 10 * numDays) ? (10 * numDays) : parking;
+		// taxi compensation: up to $20 per day
+		double taxiComp = (taxi >= 20 * numDays) ? (20 * numDays) : taxi;
+		// lodging compensation: up to $95.40 per day
+		double lodgingComp = (lodging >= 95.4) ? (95.4 * numDays) : lodging * numDays;
+		// miles driven compensation: $0.27 per mile
+		double milesComp = miles * 0.27;
+
+		// calculate totals to report to user
+
+		// total expenses
+		double totalExpensed = airfare + carRental + parking + taxi +
+				registration + (lodging * numDays);
+		// total allowable expenses
+		double totalReimbursed = mealComp + parkingComp + taxiComp +
+				lodgingComp + milesComp;
+
+		// clear user's output
+		outputArea.setText("");
+
+		// add updated report to output
+		
+		// expense breakdown
+		outputArea.append(String.format("Total expenses: $%.2f\n",
+				totalExpensed));
+		outputArea.append(String.format("    Airfare: $%.2f\n    Car Rental: $%.2f\n"
+				+ "    Parking: $%.2f\n    Taxi Fee: $%.2f\n    Registration: $%.2f\n"
+				+ "    Lodgings: $%.2f\n", 
+				airfare, carRental, parking, taxi, registration, (lodging*numDays)));
+		
+		// reimbursement breakdown
+		outputArea.append(String.format("Total allowable expenses: $%.2f\n",
+				totalReimbursed));
+		outputArea.append(String.format("    Meals: $%.2f\n    Parking: $%.2f\n"
+				+ "    Taxi Fees: $%.2f\n    Lodging: $%.2f\n    Personal Car Use: $%.2f\n", 
+				mealComp, parkingComp, taxiComp, lodgingComp, milesComp));
+
+		// amount due/amount saved to output
+		if (totalExpensed > totalReimbursed) {
+			// excess to be paid
+			outputArea.append(String.format("Excess you must pay: $%.2f\n",
+					totalExpensed - totalReimbursed));
+		} else {
+			// reimbursement delta/amount unspent
+			outputArea.append(String.format("Amount saved: $%.2f\n",
+					totalReimbursed - totalExpensed));
+		}
+	}
+	// driver code to test program
+	public static void main(String[] args) {
+		// initialize the user's frame and GUI components
+		TravelExpenseCalcFrame mainWindow = new TravelExpenseCalcFrame();
+
+		// terminate program upon closing the frame
+		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		// fit frame to its components
+		mainWindow.pack();
+
+		// show to user
+		mainWindow.setVisible(true);
+	}
+}
