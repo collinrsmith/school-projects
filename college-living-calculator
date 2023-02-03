@@ -1,0 +1,180 @@
+import java.util.HashMap;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
+import p01.LivingCostsFrame;
+
+import javax.swing.JComboBox;
+
+/**
+ * Creates a basic window with two dropdown lists containing college dorm and
+ * meal plans. Per semester costs are updated and displayed to the user as they
+ * select new plans.
+ * 
+ * @author Collin
+ *
+ */
+public class ResidenceCostCalcFrame extends JFrame implements ActionListener {
+	// key-value pair matching {dorm name}:{cost/semester}
+	private HashMap<String, Integer> dormPlans;
+	// key-value pair matching {meal type}:{cost/semester}
+	private HashMap<String, Integer> mealPlans;
+
+	// dropdown containing dorm names
+	private JComboBox dormsDropdown;
+	// dropdown containing meal plan descriptions
+	private JComboBox mealsDropdown;
+	// holds total calculated price
+	private JTextField totalPriceField;
+
+	/**
+	 * Default constructor creates components for GUI and arranges them using
+	 * GridBagLayout. Calls createPricePlans() to initialize hashmaps matching plan
+	 * to price.
+	 */
+	public ResidenceCostCalcFrame() {
+		// list of dorm names for dropdown
+		String[] dorms = { "Allen Hall", "Pike Hall", "Farthing Hall", "University Suites" };
+		// list of meal types for dropdown
+		String[] meals = { "7 meals per week", "14 meals per week", "Unlimited meals" };
+
+		// constraints for each component's layout
+		GridBagConstraints layoutConst = null;
+
+		// label for dorm dropdown
+		JLabel dormsLabel = new JLabel("Dormitories:");
+		// label for dorm dropdown
+		JLabel mealsLabel = new JLabel("Meal Plans:");
+		// label for cost of select plans
+		JLabel totalPriceLabel = new JLabel("Cost per semester:");
+
+		// map dorm/meal to price per semester
+		createPricePlans();
+
+		// create title
+		setTitle("Room and Board Costs");
+
+		// create totalPrice text field
+		totalPriceField = new JTextField(15);
+		totalPriceField.setEditable(false);
+
+		// create dorm dropdown list
+		dormsDropdown = new JComboBox(dorms);
+		dormsDropdown.addActionListener(this);
+		dormsDropdown.setSelectedIndex(0);
+
+		// create meal dropdown list
+		mealsDropdown = new JComboBox(meals);
+		mealsDropdown.addActionListener(this);
+		mealsDropdown.setSelectedIndex(0);
+
+		// use GridBagLayout
+		setLayout(new GridBagLayout());
+
+		// specify component location
+		// place dorm label and dropdown
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 10, 10);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 0;
+		add(dormsLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 10, 10);
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 0;
+		add(dormsDropdown, layoutConst);
+
+		// place meal label and dropdown
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 10, 10);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 1;
+		add(mealsLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 10, 10);
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 1;
+		add(mealsDropdown, layoutConst);
+
+		// place total price label and output field
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 10, 10);
+		layoutConst.gridx = 0;
+		layoutConst.gridy = 2;
+		add(totalPriceLabel, layoutConst);
+
+		layoutConst = new GridBagConstraints();
+		layoutConst.insets = new Insets(10, 10, 10, 10);
+		layoutConst.gridx = 1;
+		layoutConst.gridy = 2;
+		add(totalPriceField, layoutConst);
+	}
+
+	/**
+	 * Fill dormPlan and mealPlan hashmaps, creating key-value pairs of
+	 * k: {dorm/meal plan} and v: {cost}.
+	 */
+	private void createPricePlans() {
+		// initialize hashmaps
+		dormPlans = new HashMap<>();
+		mealPlans = new HashMap<>();
+
+		// pair each plan with its respective price
+		dormPlans.put("Allen Hall", 1500);
+		dormPlans.put("Pike Hall", 1600);
+		dormPlans.put("Farthing Hall", 1200);
+		dormPlans.put("University Suites", 1800);
+		
+		mealPlans.put("7 meals per week", 560);
+		mealPlans.put("14 meals per week", 1095);
+		mealPlans.put("Unlimited meals", 1500);
+	}
+
+	/**
+	 * When an action is performed on one of the dropdown lists, calculate total
+	 * expenses based on the selected plans and update the user's display with a new
+	 * price
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// cost of dorm and meal plan
+		int total = 0;
+
+		// add price of selected dorm to total
+		if (this.dormsDropdown != null) {
+			String dormItem = (String) dormsDropdown.getSelectedItem();
+			total += dormPlans.get(dormItem);
+		}
+		// add price of selected meal plan to total
+		if (this.mealsDropdown != null) {
+			String mealItem = (String) mealsDropdown.getSelectedItem();
+			total += mealPlans.get(mealItem);
+		}
+
+		// update total cost on screen
+		totalPriceField.setText("$" + Integer.toString(total));
+	}
+	
+	// driver to test program
+	public static void main(String[] args) {
+		// initialize the user's frame and GUI components
+		LivingCostsFrame mainWindow = new LivingCostsFrame();
+
+		// terminate program upon closing the frame
+		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		// fit frame to its components
+		mainWindow.pack();
+
+		// show to user
+		mainWindow.setVisible(true);
+	}
+}
