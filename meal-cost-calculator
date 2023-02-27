@@ -1,0 +1,151 @@
+import java.text.NumberFormat;
+import javafx.application.Application;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+
+/**
+ * Creates a window for users to input the price of a meal.
+ * Calculates and displays the cost of a tip and sales tax using
+ * fixed rates, as well as the total overall cost. 
+ *
+ * @author Collin
+ *
+ */
+public class MealCostFrame extends Application {
+	// sales tax to be applied as a percentage
+	private final double SALES_TAX = 0.07;
+	// tip rate to be applied as a percentage
+	private final double TIP_RATE = 0.18;
+	// currency format for text fields
+	private final NumberFormat CURR_FORMAT = NumberFormat.getCurrencyInstance();
+	// total meal cost
+	private double cost;
+
+	/**
+	 * Driver method to launch application
+	 */
+	public static void main(String[] args) {
+		// start window/program
+		launch(args);
+	}
+
+	/**
+	 * Creates and organizes GUI components with GridPane. Displays GUI to user
+	 */
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		// VARIABLES
+
+		// layout type
+		GridPane grid = new GridPane();
+		// scene to hold layout and components
+		Scene scene = new Scene(grid);
+
+		// label for user input / meal cost field
+		Label mealCostLabel = new Label("Enter price of meal:  ");
+		// label for output of tip amount
+		Label tipLabel = new Label("Amount of Tip");
+		// label for output of sales tax amount
+		Label taxLabel = new Label("Amount of Tax");
+		// label for output of total price
+		Label totalPriceLabel = new Label("Total Cost");
+
+		// text area to enter meal cost
+		TextField mealCostField = new TextField();
+		// text area for tip amount
+		TextField tipField = new TextField();
+		// text for tax amount
+		TextField taxField = new TextField();
+		// text for combined cost
+		TextField totalPriceField = new TextField();
+
+		// button to trigger cost calculations
+		Button calculateButton = new Button("calculate");
+
+		// SETTINGS
+
+		// meal cost components
+		mealCostLabel.setPadding(new Insets(5, 10, 5, 0));
+		GridPane.setHalignment(mealCostLabel, HPos.CENTER);
+
+		mealCostField.setEditable(true);
+		mealCostField.setPadding(new Insets(5, 0, 5, 10));
+
+		// tip cost components
+		tipLabel.setPadding(new Insets(10, 10, 0, 5));
+		tipField.setEditable(false);
+
+		// tax cost components
+		taxLabel.setPadding(new Insets(10, 5, 0, 5));
+		taxField.setEditable(false);
+
+		// total price components
+		totalPriceLabel.setPadding(new Insets(10, 5, 0, 10));
+		totalPriceField.setEditable(false);
+
+		// button component
+		GridPane.setHalignment(calculateButton, HPos.CENTER);
+
+		// grid layout
+		grid.setPadding(new Insets(10));
+		grid.setHgap(10);
+		grid.setVgap(10);
+
+		// ADD COMPONENTS
+
+		grid.addRow(0, mealCostLabel, mealCostField, calculateButton);
+		grid.addRow(1, tipLabel, taxLabel, totalPriceLabel);
+		grid.addRow(2, tipField, taxField, totalPriceField);
+
+		// ACTION FUNCTIONS
+
+		// retrieve and validate user input to be calculated when entered
+		mealCostField.setOnAction(event -> {
+			try {
+				// retrieve user input
+				cost = Double.valueOf(mealCostField.getText());
+
+				// alert on negative values
+				if (cost < 0) {
+					cost = 0;
+					Alert alert = new Alert(AlertType.ERROR, "Please enter a non-negative number.");
+					alert.showAndWait();
+				} else {
+					mealCostField.setText(CURR_FORMAT.format(cost));
+				}
+
+				// update field
+				mealCostField.setText(CURR_FORMAT.format(cost));
+
+			} catch (NumberFormatException e) {
+				Alert alert = new Alert(AlertType.ERROR, "Please enter a number.");
+				alert.showAndWait();
+			}
+		});
+
+		// calculate and display prices when pressed
+		calculateButton.setOnAction(event -> {
+			double tip = cost * TIP_RATE;
+			double tax = cost * SALES_TAX;
+			double total = cost + tip + tax;
+
+			tipField.setText(CURR_FORMAT.format(tip));
+			taxField.setText(CURR_FORMAT.format(tax));
+			totalPriceField.setText(CURR_FORMAT.format(total));
+		});
+
+		// DISPLAY APPLICATION
+
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Dining Calculator");
+		primaryStage.show();
+	}
+}
