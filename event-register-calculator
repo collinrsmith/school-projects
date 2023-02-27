@@ -1,0 +1,156 @@
+import java.text.NumberFormat;
+import javafx.application.Application;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Toggle;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
+
+/**
+ * Creates a window to register for various events.
+ * Users can select which events to attend, and the
+ * total price will be calculated and displayed.
+ * 
+ * @author Collin
+ *
+ */
+public class EventRegistrationFrame extends Application {
+	// currency format for output
+	private final NumberFormat CURR_FORMAT = NumberFormat.getCurrencyInstance();
+	// total cost of attendance, default at $895
+	private double totalCost = 895;
+	// output area for total cost
+	private TextField totalCostField;
+
+	/**
+	 * Driver method to launch application
+	 */
+	public static void main(String[] args) {
+		launch(args);
+	}
+
+	/**
+	 * Creates and organizes GUI components with GridPane. Displays GUI to user
+	 */
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		// VARIABLES
+
+		// layout type
+		GridPane grid = new GridPane();
+		// scene to hold layout and components
+		Scene scene = new Scene(grid);
+
+		// total cost label
+		Label totalCostLabel = new Label("Total Cost:");
+		// total cost output field
+		totalCostField = new TextField();
+
+		// group for radio buttons
+		ToggleGroup group = new ToggleGroup();
+		// to select regular attendee price
+		RadioButton regularAttendee = new RadioButton("Regular Attendee - $895");
+		// to select student attendee price
+		RadioButton studentAttendee = new RadioButton("Student Attendee - $495");
+
+		// names and prices of optional events
+		String[] optEvents = { "Opening Dinner with Keynote - $30", "Introduction to E-commerce - $295",
+				"The Future of the Web - $295", "Advanced Java Programming - $395", "Network Security - $395" };
+
+		// create and add check boxes to grid for optional events
+		for (int i = 0; i < optEvents.length; i++) {
+			String name = optEvents[i];
+			CheckBox cb = new CheckBox(name);
+			grid.add(cb, 1, i);
+
+			// update price when checking/unchecking
+			cb.setOnAction(event -> updateTotalCost(cb));
+		}
+
+		// SETTINGS
+
+		// total cost
+		GridPane.setHalignment(totalCostLabel, HPos.CENTER);
+		totalCostField.setEditable(false);
+		totalCostField.setText(CURR_FORMAT.format(totalCost));
+
+		// radio buttons
+		regularAttendee.setToggleGroup(group);
+		studentAttendee.setToggleGroup(group);
+
+		// set registration fee as user data
+		regularAttendee.setUserData(895);
+		studentAttendee.setUserData(495);
+
+		// radio button group
+		group.selectToggle(regularAttendee);
+		group.selectedToggleProperty().addListener(event -> updateTotalCost(group.getSelectedToggle()));
+
+		// grid
+		grid.setVgap(10);
+		grid.setHgap(10);
+		grid.setPadding(new Insets(10));
+
+		// ADD COMPONENTS
+
+		grid.add(regularAttendee, 0, 1);
+		grid.add(studentAttendee, 0, 3);
+		grid.add(totalCostLabel, 0, 5);
+		grid.add(totalCostField, 1, 5);
+
+		// DISPLAY APP
+
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Event Registration");
+		primaryStage.show();
+	}
+
+	/**
+	 * Updates the user's total cost when checking or unchecking an optional event
+	 * 
+	 * @param cb CheckBox being interacted with
+	 */
+	private void updateTotalCost(CheckBox cb) {
+		// separate dollar value from event
+		String[] tokens = cb.getText().split(" ");
+		int price = Integer.parseInt(tokens[tokens.length - 1].substring(1));
+
+		// add cost of event to total if checked
+		if (cb.isSelected()) {
+			totalCost += price;
+		} else {
+			totalCost -= price;
+		}
+
+		// update output
+		totalCostField.setText(CURR_FORMAT.format(totalCost));
+	}
+
+	/**
+	 * Updates user's total cost when selecting between regular or student
+	 * registration types
+	 * 
+	 * @param rb RadioButton being selected
+	 */
+	private void updateTotalCost(Toggle rb) {
+		// registration fee to adjust total cost by
+		int newFee = (int) rb.getUserData();
+
+		// remove previous selection's fee from total cost
+		if (newFee == 895) {
+			totalCost -= 495;
+		} else {
+			totalCost -= 895;
+		}
+		
+		// add new selection fee and display
+		totalCost += newFee;
+		totalCostField.setText(CURR_FORMAT.format(totalCost));
+	}
+}
